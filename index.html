@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Northstar Finance Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Finance dashboard assignment</p>
+        <h1>Northstar gives users a clear read on cash flow, spending patterns, and transaction activity.</h1>
+        <p class="hero-text">
+          A frontend-only dashboard with mock financial data, responsive charts, searchable transactions,
+          role-based controls, local persistence, and useful insights.
+        </p>
+      </div>
+      <div class="hero-actions">
+        <label class="control-field compact" for="roleSelect">
+          <span>Role</span>
+          <select id="roleSelect" aria-label="Select user role">
+            <option value="viewer">Viewer</option>
+            <option value="admin">Admin</option>
+          </select>
+        </label>
+        <label class="control-field compact" for="currencySelect">
+          <span>Currency</span>
+          <select id="currencySelect" aria-label="Select display currency">
+            <option value="USD">USD • United States</option>
+            <option value="INR">INR • India</option>
+            <option value="EUR">EUR • Eurozone</option>
+            <option value="GBP">GBP • United Kingdom</option>
+            <option value="AED">AED • UAE</option>
+            <option value="SGD">SGD • Singapore</option>
+          </select>
+        </label>
+        <button id="themeToggle" class="ghost-button" type="button" aria-label="Toggle theme">Dark theme</button>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="panel panel-accent overview-panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-label">Overview</p>
+            <h2>Financial summary</h2>
+          </div>
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            <span id="datasetBadge">14 transactions loaded</span>
+          </div>
+        </div>
+
+        <div id="summaryCards" class="summary-grid" aria-live="polite"></div>
+
+        <div class="chart-grid">
+          <article class="chart-card">
+            <div class="chart-head">
+              <div>
+                <p class="section-label">Time-based visualization</p>
+                <h3>Balance trend</h3>
+              </div>
+              <p id="trendCaption" class="chart-caption"></p>
+            </div>
+            <div id="trendChart" class="chart-area"></div>
+          </article>
+
+          <article class="chart-card">
+            <div class="chart-head">
+              <div>
+                <p class="section-label">Categorical visualization</p>
+                <h3>Spending breakdown</h3>
+              </div>
+              <p class="chart-caption">Expenses grouped by category</p>
+            </div>
+            <div id="breakdownChart" class="breakdown-area"></div>
+          </article>
+        </div>
+      </section>
+
+      <aside class="panel sidebar-panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-label">Insights</p>
+            <h2>What stands out</h2>
+          </div>
+        </div>
+        <div id="insightsList" class="insight-list"></div>
+        <div class="divider"></div>
+        <div class="panel-head">
+          <div>
+            <p class="section-label">Health score</p>
+            <h2>Financial posture</h2>
+          </div>
+        </div>
+        <div id="healthCard" class="health-card"></div>
+        <div class="divider"></div>
+        <div class="panel-head">
+          <div>
+            <p class="section-label">Budget watch</p>
+            <h2>Category budget status</h2>
+          </div>
+        </div>
+        <div id="budgetList" class="budget-list"></div>
+        <div class="divider"></div>
+        <div class="panel-head">
+          <div>
+            <p class="section-label">Role behavior</p>
+            <h2>Frontend RBAC demo</h2>
+          </div>
+        </div>
+        <div id="roleCard" class="role-card"></div>
+      </aside>
+
+      <section class="panel transactions-panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-label">Transactions</p>
+            <h2>Search, sort, and filter activity</h2>
+          </div>
+          <div class="action-group">
+            <button id="exportCsvButton" class="ghost-button" type="button">Export CSV</button>
+            <button id="exportJsonButton" class="ghost-button" type="button">Export JSON</button>
+            <button id="addTransactionButton" class="primary-button" type="button">Add transaction</button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <label class="control-field search-field" for="searchInput">
+            <span>Search</span>
+            <input id="searchInput" type="search" placeholder="Search merchant, category, or note" />
+          </label>
+          <label class="control-field" for="typeFilter">
+            <span>Type</span>
+            <select id="typeFilter">
+              <option value="all">All</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+          </label>
+          <label class="control-field" for="categoryFilter">
+            <span>Category</span>
+            <select id="categoryFilter">
+              <option value="all">All categories</option>
+            </select>
+          </label>
+          <label class="control-field" for="sortSelect">
+            <span>Sort by</span>
+            <select id="sortSelect">
+              <option value="date-desc">Newest first</option>
+              <option value="date-asc">Oldest first</option>
+              <option value="amount-desc">Highest amount</option>
+              <option value="amount-asc">Lowest amount</option>
+            </select>
+          </label>
+          <button id="clearFiltersButton" class="ghost-button" type="button">Clear filters</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="transactions-table">
+            <thead>
+              <tr>
+                <th scope="col">Transaction</th>
+                <th scope="col">Date</th>
+                <th scope="col">Category</th>
+                <th scope="col">Type</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody id="transactionsBody"></tbody>
+          </table>
+          <div id="emptyState" class="empty-state" hidden>
+            <h3>No matching transactions</h3>
+            <p>Try changing the filters or reset the search to see data again.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="transactionDialog" class="modal">
+    <form id="transactionForm" class="modal-card" method="dialog">
+      <div class="panel-head">
+        <div>
+          <p class="section-label">Admin action</p>
+          <h2 id="dialogTitle">Add transaction</h2>
+        </div>
+        <button id="closeDialogButton" class="ghost-button icon-button" type="button" aria-label="Close dialog">x</button>
+      </div>
+
+      <div class="form-grid">
+        <label class="control-field" for="transactionName">
+          <span>Name</span>
+          <input id="transactionName" name="name" type="text" required />
+        </label>
+        <label class="control-field" for="transactionDate">
+          <span>Date</span>
+          <input id="transactionDate" name="date" type="date" required />
+        </label>
+        <label class="control-field" for="transactionCategory">
+          <span>Category</span>
+          <input id="transactionCategory" name="category" type="text" required />
+        </label>
+        <label class="control-field" for="transactionType">
+          <span>Type</span>
+          <select id="transactionType" name="type" required>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </label>
+        <label class="control-field" for="transactionAmount">
+          <span>Amount</span>
+          <input id="transactionAmount" name="amount" type="number" min="0" step="0.01" required />
+        </label>
+        <label class="control-field" for="transactionNote">
+          <span>Note</span>
+          <input id="transactionNote" name="note" type="text" placeholder="Optional context" />
+        </label>
+      </div>
+
+      <p class="helper-text">Only the Admin role can add or edit transactions. Viewer mode keeps the same interface but disables write actions.</p>
+
+      <div class="modal-actions">
+        <button class="ghost-button" type="button" id="cancelDialogButton">Cancel</button>
+        <button class="primary-button" type="submit">Save transaction</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
