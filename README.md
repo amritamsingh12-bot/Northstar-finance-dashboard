@@ -29,7 +29,7 @@ A responsive frontend-only finance dashboard built with plain HTML, CSS, and Jav
 
 ## Setup
 
-1. Open [index.html](C:\Users\Amrita\OneDrive\文档\New project\index.html) in a browser.
+1. Open [index.html]in a browser.
 2. If you use VS Code, Live Server works well for local preview.
 
 No build step or backend is required.
@@ -46,11 +46,4 @@ The UI aims to feel intentional rather than generic: a Zorvyn-inspired futuristi
 - Mock data represents recent personal finance activity centered on March 2026
 - Role switching is purely a frontend simulation for demonstration purposes
 
-## Minimal upload set
 
-If you want the simplest GitHub upload, just upload these four root files:
-
-- `index.html`
-- `styles.css`
-- `app.js`
-- `README.md`
